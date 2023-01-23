@@ -2,11 +2,11 @@ const axios = require('axios');
 const qs = require('qs');
 
 const ensureAuthenticated = async (req, res, next) => {
-    const logging = 1;
+    const logging = 0;
 
     const {user, access_token, refresh_token} = req.session;
 
-    if (!user || !access_token || !refresh_token) {
+    if (!user || !access_token) {
         if (logging) console.log('no token')
         // kick em out
         return res.render('pages/login', {error: ''});
@@ -35,11 +35,12 @@ const ensureAuthenticated = async (req, res, next) => {
     };
     if (logging) console.log('invalid token')
     // if token is not valid, use refresh token to get a new one
+    
     const newAccessToken = await axios({
         method: 'post',
         url: `${process.env.BASE_URL}/oauth/connect/token`,
         headers: {
-            'Authorization': `Basic ${process.env.BASIC_AUTH_SECRET}`
+            'Authorization': `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`
         },
         data: qs.stringify({
             'grant_type': 'refresh_token',
@@ -49,12 +50,17 @@ const ensureAuthenticated = async (req, res, next) => {
         .then(response => response.data.access_token)
         .catch(err => {
             console.log('something went wrong: ' + err);
-            res.render('pages/login', {error: 'internal server error'});
+            return false;
         })
 
     if (logging) console.log('new token')
-    req.session.access_token = newAccessToken;
-    return next();
+
+    if (newAccessToken) {
+        req.session.access_token = newAccessToken;
+        return next();
+    } else {
+        return res.render('pages/login', {error: 'internal server error'})
+    }
 }
 
 const checkUserGroups = async (req, res, next) => {
@@ -73,7 +79,7 @@ const checkUserGroups = async (req, res, next) => {
 
     const groupUserIds = await axios({
         method: 'get',
-        url: `${process.env.BASE_URL}/tables/dp_User_User_Groups?%24filter=User_Group_ID=${process.env.AUTHORIZED_USER_GROUP_ID}`,
+        url: `${process.env.BASE_URL}/tables/dp_User_User_Groups?$filter=User_Group_ID=${process.env.AUTHORIZED_USER_GROUP_ID}`,
         headers: {
             'authorization': `Bearer ${access_token}`
         }
@@ -84,9 +90,9 @@ const checkUserGroups = async (req, res, next) => {
             res.render('pages/login', {error: 'internal server error'});
         })
 
-    const {userid} = req.session.user
+    const {user} = req.session;
     // checks authorized user group for logged in user's id
-    const userAuthorized = groupUserIds.filter(id => id == userid).length > 0;
+    const userAuthorized = groupUserIds.filter(id => id == user.userid).length > 0 || (user.roles && user.roles.includes("Administrators"));
     
     // if user IS a part of authorized group
     // let em in

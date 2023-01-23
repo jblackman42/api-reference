@@ -15,7 +15,6 @@
     <h1>Hello <span id="user-name">World</span></h1>
     <a href="/logout">Log Out</a>
 
-    <button onclick="test()">Test</button>
     <script>
         (async () => {
             const user = await axios({
@@ -26,21 +25,13 @@
 
             if (user) {
                 console.log(user);
-                const {display_name, nickname} = user;
+                const {display_name, nickname, name} = user;
 
-                document.getElementById('user-name').innerText = nickname;
+                document.getElementById('user-name').innerText = nickname || name;
             } else {
                 console.log('not logged in')
             }
         })()
-
-        const test = async () => {
-            await axios({
-                method: 'get',
-                url: '/api/auth/test'
-            })
-            .then(response => console.log(response))
-        }
     </script>
 </body>
 </html>

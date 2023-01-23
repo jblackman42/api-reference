@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/styles/main.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="https://kit.fontawesome.com/e61ab9568e.js" crossorigin="anonymous"></script>
+    
+    <!-- axios link -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <title>Login</title>
+</head>
+<body class="container">
+    <%- include('../partials/loading'); %>
+    <div class="forms-container">
+        <form id="register-form">
+            <div class="input-container">
+                <label for="Address_Line">Address:</label>
+                <input type="text" name="Address_Line" id="Address_Line">
+            </div>
+            <div class="input-container">
+                <label for="City">City:</label>
+                <input type="text" name="City" id="City">
+            </div>
+            <div class="input-container">
+                <label for="State">State:</label>
+                <select name="State" id="State"></select>
+            </div>
+            <div class="input-container">
+                <label for="Phone">Phone Number:</label>
+                <input type="tel" name="Phone" id="Phone">
+            </div>
+            <div class="input-container">
+                <label for="Email">Email:</label>
+                <input type="email" name="Email" id="Email">
+            </div>
+            <div class="input-container">
+                <label for="First_Name">First Name:</label>
+                <input type="text" name="First_Name" id="First_Name">
+            </div>
+            <div class="input-container">
+                <label for="Last_Name">Last Name:</label>
+                <input type="text" name="Last_Name" id="Last_Name">
+            </div>
+            <div class="input-container">
+                <label for="Username">Username:</label>
+                <input type="text" name="Username" id="Username">
+            </div>
+            <div class="input-container">
+                <label for="Password">Password:</label>
+                <input type="password" name="Password" id="Password">
+            </div>
+        </form>
+    </div>
+      
+    </body>
+<script>
+    const stateLabelValues = [{ 'label':'Alabama', 'value': 'AL' },{ 'label':'Alaska', 'value': 'AK'},{ 'label':'American Samoa', 'value': 'AS'},{ 'label':'Arizona', 'value': 'AZ'},{ 'label':'Arkansas', 'value': 'AR'},{ 'label':'California', 'value': 'CA'},{ 'label':'Colorado', 'value': 'CO'},{ 'label':'Connecticut', 'value': 'CT'},{ 'label':'Delaware', 'value': 'DE'},{ 'label':'District of Columbia', 'value': 'DC'},{ 'label':'States of Micronesia', 'value': 'FM'},{ 'label':'Florida', 'value': 'FL'},{ 'label':'Georgia', 'value': 'GA'},{ 'label':'Guam', 'value': 'GU'},{ 'label':'Hawaii', 'value': 'HI'},{ 'label':'Idaho', 'value': 'ID'},{ 'label':'Illinois', 'value': 'IL'},{ 'label':'Indiana', 'value': 'IN'},{ 'label':'Iowa', 'value': 'IA'},{ 'label':'Kansas', 'value': 'KS'},{ 'label':'Kentucky', 'value': 'KY'},{ 'label':'Louisiana', 'value': 'LA'},{ 'label':'Maine', 'value': 'ME'},{ 'label':'Marshall Islands', 'value': 'MH'},{ 'label':'Maryland', 'value': 'MD'},{ 'label':'Massachusetts', 'value': 'MA'},{ 'label':'Michigan', 'value': 'MI'},{ 'label':'Minnesota', 'value': 'MN'},{ 'label':'Mississippi', 'value': 'MS'},{ 'label':'Missouri', 'value': 'MO'},{ 'label':'Montana', 'value': 'MT'},{ 'label':'Nebraska', 'value': 'NE'},{ 'label':'Nevada', 'value': 'NV'},{ 'label':'New Hampshire', 'value': 'NH'},{ 'label':'New Jersey', 'value': 'NJ'},{ 'label':'New Mexico', 'value': 'NM'},{ 'label':'New York', 'value': 'NY'},{ 'label':'North Carolina', 'value': 'NC'},{ 'label':'North Dakota', 'value': 'ND'},{ 'label':'Northern Mariana Islands', 'value': 'MP'},{ 'label':'Ohio', 'value': 'OH'},{ 'label':'Oklahoma', 'value': 'OK'},{ 'label':'Oregan', 'value': 'OR'},{ 'label':'Palau', 'value': 'PW'},{ 'label':'Pennsilvania', 'value': 'PA'},{ 'label':'Puerto Rico', 'value': 'PR'},{ 'label':'Rhode Island', 'value': 'RI'},{ 'label':'South Carolina', 'value': 'SC'},{ 'label':'South Dakota', 'value': 'SD'},{ 'label':'Tennessee', 'value': 'TN'},{ 'label':'Texas', 'value': 'TX'},{ 'label':'Utah', 'value': 'UT'},{ 'label':'Vermont', 'value': 'VT'},{ 'label':'Virgin Islands', 'value': 'VI'},{ 'label':'Virginia', 'value': 'VA'},{ 'label':'Washington', 'value': 'WA'},{ 'label':'West Virginia', 'value': 'WV'},{ 'label':'Wisconsin', 'value': 'WI'},{ 'label':'Wyoming', 'value': 'WY'}];
+    document.getElementById('State').innerHTML = stateLabelValues.map(state => {
+        return `<option value=${state.value}>${state.label}</option>`
+    })
+    const registerForm = document.getElementById('register-form');
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // loading();
+        // await axios({
+        //     method: 'post',
+        //     url: '/api/register',
+        //     data: {
+        //         "Address_Line": "1234 W Test Rd",
+        //         "City": "Glendale",
+        //         "State": "AZ",
+        //         "Church_Name": "Cool Church",
+        //         "Phone": "1234567890",
+        //         "First_Name": "Test",
+        //         "Last_Name": "User",
+        //         "Email": "testuser@gmail.com",
+        //         "Username": "apitestuser",
+        //         "Password": "PureHeart123"
+        //     }
+        // })
+        //     .then(response => {if (response.status >= 200 && response.status < 300) window.location = '/'})
+        //     .catch(err => {
+        //         console.error(err)
+        //         document.querySelector('.form-error').innerText = err.response.data ? err.response.data.error : 'internal server error';
+        //         doneLoading();
+        //     })
+    })
+</script>
+</html>

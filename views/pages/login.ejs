@@ -27,7 +27,13 @@
                 <input type="password" name="password" id="password" autocomplete="on" placeholder="Password" required>
                 <i class='far fa-eye-slash' id="togglePassword"></i>
             </div>
-    
+            <div class="row">
+                <div class="remember-input" title="Keeps you logged in on this device for 30 days">
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember">Keep Me Logged In</label>
+                </div>
+                <a href="https://my.pureheart.org/ministryplatformapi/oauth/reset">Forgot Password</a>
+            </div>
             <button type="submit" class="login">Sign In</button>
             <p class="help-msg">Sign In With Ministry Platform Credentials</p>
             
@@ -48,7 +54,8 @@
             url: '/api/auth/login',
             data: {
                 "username": document.getElementById('username').value,
-                "password": document.getElementById('password').value
+                "password": document.getElementById('password').value,
+                "remember": document.getElementById('remember').checked
             }
         })
             .then(response => {if (response.status >= 200 && response.status < 300) window.location = '/'})

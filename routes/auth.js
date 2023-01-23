@@ -6,7 +6,7 @@ const qs = require('qs');
 const { ensureAuthenticated } = require('../middleware/authorize');
 
 router.post('/login', async (req, res) => {
-    const {username, password} = req.body;
+    const {username, password, remember} = req.body;
     
     try {
         const login = await axios({
@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
             }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Basic ${process.env.BASIC_AUTH_SECRET}`
+                'Authorization': `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`
             }
         })
             .then(response => response.data)
@@ -40,7 +40,8 @@ router.post('/login', async (req, res) => {
 
         req.session.user = user;
         req.session.access_token = access_token;
-        req.session.refresh_token = refresh_token;
+        // if user selected keep me logged in, set refresh token, otherwise set in to null
+        req.session.refresh_token = remember ? refresh_token : null;
         
         res.status(200).send(user).end();
     } catch (err) {
@@ -55,14 +56,11 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.get('/test', ensureAuthenticated, async (req, res) => {
-    res.sendStatus(200)
-})
-
 router.get('/logout', (req, res) => {
     try {
         req.session.user = null;
         req.session.access_token = null;
+        req.session.refresh_token = null;
         res.redirect('/')
     } catch(err) {
         res.status(500).send({error: 'internal server error'})

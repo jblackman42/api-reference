@@ -7,7 +7,10 @@ navigation.get('/', ensureAuthenticated, checkUserGroups, (req, res) => {
     res.render('pages/index')
 })
 navigation.get('/login', (req, res) => {
-    res.render('pages/login')
+    res.render('pages/login', {error: null})
+})
+navigation.get('/register', (req, res) => {
+    res.render('pages/register')
 })
 
 

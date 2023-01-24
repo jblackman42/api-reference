@@ -526,4 +526,138 @@ html {
 #loginForm .loginOption a:active,
 #signUpForm .loginOption a:active {
   filter: brightness(0.6);
+}
+
+.forms-container #register-form .progress {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  padding: 1rem 0;
+  position: relative;
+}
+.forms-container #register-form .progress .step {
+  background-color: white;
+  padding: 10px;
+  border-radius: 50%;
+  z-index: 999;
+  background-color: white;
+  transition: background-color 150ms linear;
+  transition-delay: 300ms;
+}
+.forms-container #register-form .progress .step:nth-child(1) {
+  background-color: #7ed6df;
+}
+.forms-container #register-form .progress .step i {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+}
+.forms-container #register-form .progress::before, .forms-container #register-form .progress::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background-color: white;
+  top: calc(50% - 1px);
+}
+.forms-container #register-form .progress::after {
+  background-color: #7ed6df;
+  left: 0;
+  width: 16.5%;
+  transition: width 300ms linear;
+}
+.forms-container #register-form .progress.page-1::after {
+  width: 49.5%;
+}
+.forms-container #register-form .progress.page-1 .step:nth-child(2) {
+  background-color: #7ed6df;
+}
+.forms-container #register-form .progress.page-2::after {
+  width: 82.5%;
+}
+.forms-container #register-form .progress.page-2 .step:nth-child(2) {
+  background-color: #7ed6df;
+}
+.forms-container #register-form .progress.page-2 .step:nth-child(3) {
+  background-color: #7ed6df;
+}
+.forms-container #register-form .progress.done::after {
+  width: 100%;
+}
+.forms-container #register-form .error-container {
+  display: flex;
+  justify-content: center;
+}
+.forms-container #register-form .error-container p {
+  margin: 0;
+  font-weight: bold;
+  color: #e74c3c;
+}
+.forms-container .page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 500px;
+  gap: 1rem;
+  margin: 1rem;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+.forms-container .page .input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  position: relative;
+}
+.forms-container .page .input-container.full-width {
+  grid-column: 1/3;
+}
+.forms-container .page .input-container label {
+  position: absolute;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  width: 100%;
+  top: 50%;
+  left: 0.25rem;
+  transform: translate(0, -50%);
+  transition: transform 100ms ease-in-out;
+}
+.forms-container .page .input-container input, .forms-container .page .input-container select {
+  border: none;
+  font-size: 20px;
+  border-radius: 2px;
+  outline: none;
+}
+.forms-container .page .input-container input:invalid, .forms-container .page .input-container select:invalid {
+  outline: 2px solid #e74c3c;
+}
+.forms-container .page .input-container input:invalid ~ label::before, .forms-container .page .input-container select:invalid ~ label::before {
+  content: "Invalid";
+  position: absolute;
+  color: #e74c3c;
+  right: -25%;
+  bottom: -100%;
+  transform: translate(0, -100%);
+}
+.forms-container .page .input-container input:not(:-moz-placeholder-shown) ~ label, .forms-container .page .input-container select:not(:-moz-placeholder-shown) ~ label {
+  transform-origin: top left;
+  transform: scale(0.8) translate(-0.25rem, calc(-150% - 0.25rem));
+}
+.forms-container .page .input-container input:not(:-ms-input-placeholder) ~ label, .forms-container .page .input-container select:not(:-ms-input-placeholder) ~ label {
+  transform-origin: top left;
+  transform: scale(0.8) translate(-0.25rem, calc(-150% - 0.25rem));
+}
+.forms-container .page .input-container input:not(:placeholder-shown) ~ label, .forms-container .page .input-container select:not(:placeholder-shown) ~ label {
+  transform-origin: top left;
+  transform: scale(0.8) translate(-0.25rem, calc(-150% - 0.25rem));
+}
+.forms-container .btn-container {
+  grid-column: 1/3;
+  display: flex;
+  justify-content: space-between;
 }/*# sourceMappingURL=main.css.map */

@@ -4,8 +4,8 @@ const axios = require('axios');
 const qs = require('qs');
 
 router.post('/', async (req, res) => {
-    const logging = 0;
-    const {Address_Line, City, State, Church_Name, Phone, First_Name, Last_Name, Email, Username, Password} = req.body;
+    const logging = 1;
+    const {Address_Line, City, State, Church_Name, Postal_Code, Phone, First_Name, Last_Name, Email, Username, Password} = req.body;
     // get access token
     // make address
     // make household
@@ -41,6 +41,7 @@ router.post('/', async (req, res) => {
                 "Address_Line_1": Address_Line,
                 "City": City,
                 "State/Region": State,
+                "Postal_Code": Postal_Code,
                 "Country_Code": "USA"
             }]
         })

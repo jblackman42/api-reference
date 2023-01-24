@@ -21,41 +21,74 @@
     <%- include('../partials/loading'); %>
     <div class="forms-container">
         <form id="register-form">
-            <div class="input-container">
-                <label for="Address_Line">Address:</label>
-                <input type="text" name="Address_Line" id="Address_Line">
+            <div class="progress">
+                <div class="step step-0"><i class='fas fa-user'></i></div>
+                <div class="step step-1"><i class='fas fas fa-home'></i></div>
+                <div class="step step-2"><i class='fas fa-lock'></i></div>
             </div>
-            <div class="input-container">
-                <label for="City">City:</label>
-                <input type="text" name="City" id="City">
+            <div class="error-container">
+                <p id="error-msg"></p>
             </div>
-            <div class="input-container">
-                <label for="State">State:</label>
-                <select name="State" id="State"></select>
+            <div class="page" id="page-0">
+                <div class="input-container">
+                    <input type="text" name="First_Name" id="First_Name" placeholder=" " >
+                    <label for="First_Name">First Name</label>
+                </div>
+                <div class="input-container">
+                    <input type="text" name="Last_Name" id="Last_Name" placeholder=" ">
+                    <label for="Last_Name">Last Name</label>
+                </div>
+                <div class="input-container">
+                    <input type="tel" name="Phone" id="Phone" placeholder=" ">
+                    <label for="Phone">Phone Number</label>
+                </div>
+                <div class="input-container">
+                    <input type="email" name="Email" id="Email" placeholder=" ">
+                    <label for="Email">Email</label>
+                </div>
+                <div class="btn-container">
+                    <button type="button" onclick="next()" style="margin-left: auto;">Next</button>
+                </div>
             </div>
-            <div class="input-container">
-                <label for="Phone">Phone Number:</label>
-                <input type="tel" name="Phone" id="Phone">
+            <div class="page" id="page-1">
+                <div class="input-container full-width">
+                    <input type="text" name="Church_Name" id="Church_Name" placeholder=" ">
+                    <label for="Church_Name">Church/Community Name</label>
+                </div>
+                <div class="input-container">
+                    <input type="text" name="Address_Line" id="Address_Line" placeholder=" ">
+                    <label for="Address_Line">Address</label>
+                </div>
+                <div class="input-container">
+                    <input type="text" name="City" id="City" placeholder=" ">
+                    <label for="City">City</label>
+                </div>
+                <div class="input-container">
+                    <select name="State" id="State" placeholder=" "></select>
+                    <label for="State">State</label>
+                </div>
+                <div class="input-container">
+                    <input type="text" name="Postal_Code" id="Postal_Code" placeholder=" " pattern="[0-9]*">
+                    <label for="Postal_Code">Postal Code</label>
+                </div>
+                <div class="btn-container">
+                    <button type="button" onclick="back()">Back</button>
+                    <button type="button" onclick="next()">Next</button>
+                </div>
             </div>
-            <div class="input-container">
-                <label for="Email">Email:</label>
-                <input type="email" name="Email" id="Email">
-            </div>
-            <div class="input-container">
-                <label for="First_Name">First Name:</label>
-                <input type="text" name="First_Name" id="First_Name">
-            </div>
-            <div class="input-container">
-                <label for="Last_Name">Last Name:</label>
-                <input type="text" name="Last_Name" id="Last_Name">
-            </div>
-            <div class="input-container">
-                <label for="Username">Username:</label>
-                <input type="text" name="Username" id="Username">
-            </div>
-            <div class="input-container">
-                <label for="Password">Password:</label>
-                <input type="password" name="Password" id="Password">
+            <div class="page" id="page-2">
+                <div class="input-container full-width">
+                    <input type="text" name="Username" id="Username" placeholder=" " autocomplete="off">
+                    <label for="Username">Username</label>
+                </div>
+                <div class="input-container full-width">
+                    <input type="password" name="Password" id="Password" placeholder=" " autocomplete="off">
+                    <label for="Password">Password</label>
+                </div>
+                <div class="btn-container">
+                    <button type="button" onclick="back()">Back</button>
+                    <button type="submit">Submit</button>
+                </div>
             </div>
         </form>
     </div>
@@ -71,29 +104,86 @@
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // loading();
-        // await axios({
-        //     method: 'post',
-        //     url: '/api/register',
-        //     data: {
-        //         "Address_Line": "1234 W Test Rd",
-        //         "City": "Glendale",
-        //         "State": "AZ",
-        //         "Church_Name": "Cool Church",
-        //         "Phone": "1234567890",
-        //         "First_Name": "Test",
-        //         "Last_Name": "User",
-        //         "Email": "testuser@gmail.com",
-        //         "Username": "apitestuser",
-        //         "Password": "PureHeart123"
-        //     }
-        // })
-        //     .then(response => {if (response.status >= 200 && response.status < 300) window.location = '/'})
-        //     .catch(err => {
-        //         console.error(err)
-        //         document.querySelector('.form-error').innerText = err.response.data ? err.response.data.error : 'internal server error';
-        //         doneLoading();
-        //     })
+        const progressDOM = document.querySelector('.progress');
+        progressDOM.classList.add('done')
+
+        const formData = {
+            Address_Line: document.getElementById('Address_Line').value || null,
+            City: document.getElementById('City').value || null,
+            Church_Name: document.getElementById('Church_Name').value || null,
+            State: document.getElementById('State').value || null,
+            Postal_Code: document.getElementById('Postal_Code').value || null,
+            Phone: document.getElementById('Phone').value || null,
+            Email: document.getElementById('Email').value || null,
+            First_Name: document.getElementById('First_Name').value || null,
+            Last_Name: document.getElementById('Last_Name').value || null,
+            Username: document.getElementById('Username').value || null,
+            Password: document.getElementById('Password').value || null
+        }
+
+        const formFilled = Object.values(formData).every(o => o !== null);
+        
+        if (!formFilled) {
+            progressDOM.classList.remove('done')
+            const errorMsgDOM = document.getElementById('error-msg');
+            errorMsgDOM.innerText = 'Not All Fields Completed'
+            return;
+        }
+
+        loading();
+        await axios({
+            method: 'post',
+            url: '/api/register',
+            data: formData
+        })
+            .then(response => {if (response.status >= 200 && response.status < 300) window.location = '/'})
+            .catch(err => {
+                console.error(err)
+                document.querySelector('.form-error').innerText = err.response.data ? err.response.data.error : 'internal server error';
+                doneLoading();
+            })
     })
+
+    let page = 0;
+    const next = () => {
+        document.querySelectorAll('.step').forEach(elem => elem.style.transitionDelay = '300ms');
+        page ++;
+        updatePages();
+    }
+    const back = () => {
+        document.querySelectorAll('.step').forEach(elem => elem.style.transitionDelay = '0ms');
+        page --;
+        updatePages();
+    }
+    const updatePages = () => {
+        const currPage = document.getElementById(`page-${page}`);
+        if (!currPage) return page = 0;
+
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(elem => {
+            elem.style.display = 'none';
+            elem.style.visibility = 'hidden';
+        })
+
+        currPage.style.display = 'grid';
+        currPage.style.visibility = 'visible';
+
+        const progressDOM = document.querySelector('.progress');
+        if (page == 0) {
+            progressDOM.classList.add('page-0')
+            progressDOM.classList.remove('page-1')
+            progressDOM.classList.remove('page-2')
+        } else if (page == 1) {
+            progressDOM.classList.remove('page-0')
+            progressDOM.classList.add('page-1')
+            progressDOM.classList.remove('page-2')
+        } else if (page == 2) {
+            progressDOM.classList.remove('page-0')
+            progressDOM.classList.remove('page-1')
+            progressDOM.classList.add('page-2')
+        }
+        progressDOM.classList.remove('done')
+    }
+    updatePages();
 </script>
 </html>

@@ -23,14 +23,23 @@
             })
                 .then(response => response.data)
 
-            if (user) {
-                console.log(user);
-                const {display_name, nickname, name} = user;
-
-                document.getElementById('user-name').innerText = nickname || name;
-            } else {
+            if (!user) {
                 console.log('not logged in')
+                return
             }
+
+            console.log(user);
+            const {display_name, nickname, name} = user;
+
+            document.getElementById('user-name').innerText = nickname || name;
+
+            const group = await axios({
+                method: 'get',
+                url: '/api/auth/group'
+            })
+                .then(response => response.data)
+
+            console.log(group)
         })()
     </script>
 </body>

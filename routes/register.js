@@ -5,7 +5,7 @@ const qs = require('qs');
 
 router.post('/', async (req, res) => {
     const logging = 1;
-    const {Address_Line, City, State, Church_Name, Postal_Code, Phone, First_Name, Last_Name, Email, Username, Password} = req.body;
+    const {Address_Line, City, State, Church_Name, Postal_Code, Phone, First_Name, Last_Name, Email, Prayer_Requests, Pattern, Username, Password} = req.body;
     // get access token
     // make address
     // make household
@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
     // make user
     // set user password
     // add user to user group
-    let accessToken, address, household, contact, user, group;
+    let accessToken, address, household, contact, user, group, community;
     try {
         // get access token ---------------------------------------- //
         const data = await axios({
@@ -138,6 +138,24 @@ router.post('/', async (req, res) => {
             }
         })
         if (logging) console.log('set new password')
+
+        community = await axios({
+            method: 'post',
+            url: `${process.env.BASE_URL}/tables/Prayer_Communities`,
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Authorization": `Bearer ${access_token}`
+            },
+            data: [{
+                "Contact_ID": contact.Contact_ID,
+                "Address_ID": address.Address_ID,
+                "Prayer_Points": Prayer_Requests,
+                "Start_Date": new Date(),
+                "End_Date": null,
+                "Pattern": Pattern
+            }]
+        })
+        if (logging) console.log('created community')
         
         res.sendStatus(200)
     } catch(err) {
@@ -207,7 +225,18 @@ router.post('/', async (req, res) => {
             })
             .catch(err => console.log('failed to delete address: ', err))
         }
-        res.sendStatus(500)
+        if (community) {
+            // delete community if one was made
+            await axios({
+                method: 'delete',
+                url: `${process.env.BASE_URL}/tables/Prayer_Communities/${community.Prayer_Community_ID}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+        }
+        res.status(500).send({error: "Internal Server Error. Try Again or Contact Us"}).end();
     }
 })
 

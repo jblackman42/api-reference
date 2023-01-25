@@ -5,6 +5,22 @@ const qs = require('qs');
 
 const { ensureAuthenticated } = require('../middleware/authorize');
 
+const getToken = async () => {
+    const data = await axios({
+        method: 'post',
+        url: `${process.env.BASE_URL}/oauth/connect/token`,
+        data: qs.stringify({
+            grant_type: "client_credentials",
+            scope: "http://www.thinkministry.com/dataplatform/scopes/all",
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET
+        })
+    })
+        .then(response => response.data)
+    const {access_token} = data;
+    return access_token;
+}
+
 router.post('/login', async (req, res) => {
     const {username, password, remember} = req.body;
     
@@ -72,6 +88,27 @@ router.get('/user', (req, res) => {
         res.send(req.session.user).end()
     } else {
         res.send(null).end()
+    }
+})
+
+router.get('/group', ensureAuthenticated, async (req, res) => {
+    try {
+        const {user} = req.session;
+        const access_token = await getToken();
+        
+        const group = await axios({
+            method: 'get',
+            url: `${process.env.BASE_URL}/tables/Prayer_Communities?$filter=Contact_ID=${user.ext_Contact_ID}`,
+            headers: {
+                "Content-Type": "Application/JSON",
+                "Authorization": `Bearer ${access_token}`
+            }
+        })
+            .then(response => response.data[0] || null)
+
+        res.status(200).send(group).end();
+    } catch(err) {
+        res.status(500).send({err: err}).end();
     }
 })
 
